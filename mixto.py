@@ -1,11 +1,12 @@
-def select_next_variables():
-    if not hasattr(select_next_variables, 'count'):
-        select_next_variables.count = 0
-    # m_values = [101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191,
-    #             193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307]
-    # coprimes = [(13, 14),(28, 57),(1, 99),(2, 97),(46, 67),(75, 41)]
-    select_next_variables.count += 1
-    return {'a': 5, 'c': 7, 'm': 8 * select_next_variables.count, 'seed': 4 + select_next_variables.count - 1}
+from linecache import getline
+from json import loads
+from var_generator import generate_values
+
+
+def select_next_variables(file_name, position):
+    line = getline(file_name+'.txt', position).replace("'",'"').replace('\n', '')
+    variables = loads(line)
+    return {'a': variables['a'], 'c': variables['c'], 'm': variables['m'], 'seed': variables['seed']}
 
 
 def cal_xn1(a, c, m, Xn):
@@ -14,12 +15,15 @@ def cal_xn1(a, c, m, Xn):
 
 
 def rand_mix():
+    # Contador de linea en variables
+    if not hasattr(rand_mix, 'line_count'):
+        rand_mix.line_count = 1
     # Si no existe la cuenta es igual a 0
     if not hasattr(rand_mix, 'count'):
         rand_mix.count = 0
     # Si es igual a 0 busca las siguientes variables y actualiza
     if rand_mix.count == 0:
-        cal_vars = select_next_variables()
+        cal_vars = select_next_variables('variables', rand_mix.line_count)
         rand_mix.a = cal_vars['a']
         rand_mix.c = cal_vars['c']
         rand_mix.m = cal_vars['m']
@@ -30,6 +34,12 @@ def rand_mix():
     rand_mix.count += 1
     # Si la cuenta es igual a m -> borra para generar nuevos números
     if rand_mix.count == rand_mix.m:
+        # Si la cuenta de lineas es igual a el total de lineas -> borra para generar nuevas variables
+        if rand_mix.line_count == len(open('variables.txt').readlines()):
+            generate_values(50, 'variables')
+            del rand_mix.line_count
+        else:
+            rand_mix.line_count += 1
         del rand_mix.count
     # Almacena Xn + 1 como el nuevo Xn
     rand_mix.Xn = Xn1
@@ -37,7 +47,8 @@ def rand_mix():
     return Xn1 / rand_mix.m
 
 
-for m in range(24):
-    if m % 8 == 0:
-        print()
+for m in range(100):
     print(rand_mix())
+
+# Por si se quiere refrescar la lista
+# generate_values(500, 'variables')
