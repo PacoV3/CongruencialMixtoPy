@@ -74,4 +74,4 @@ def generate_values(turns, file_name):
 
 
 # Con el generador actual se pueden generar aproximadamente 350 combinaciones correctas
-generate_values(50, 'variables')
+# generate_values(1000, 'variables')
