@@ -1,6 +1,7 @@
 from linecache import getline
 from json import loads
 from var_generator import generate_values
+from mean_test import check_mean_test
 
 
 def select_next_variables(file_name, position):
@@ -46,9 +47,11 @@ def rand_mix():
     # Regresa la variable dividiendo Xn + 1 entre m
     return Xn1 / rand_mix.m
 
-
+pseudo_100 = []
 for m in range(100):
-    print(rand_mix())
+    pseudo_100.append(rand_mix())
+
+check_mean_test(pseudo_100)
 
 # Por si se quiere refrescar la lista
 # generate_values(500, 'variables')
