@@ -1,13 +1,13 @@
-from linecache import getline
-from json import loads
+from ast import literal_eval as make_tuple
+from new_line_txt import write_line_txt
 from var_generator import generate_values
 from mean_test import check_mean_test
 
 
-def select_next_variables(file_name, position):
-    line = getline(file_name+'.txt', position).replace("'",'"').replace('\n', '')
-    variables = loads(line)
-    return {'a': variables['a'], 'c': variables['c'], 'm': variables['m'], 'seed': variables['seed']}
+def select_next_variables(file_name):
+    with open(file_name+'.txt') as f:
+        line = f.readline().replace('\n', '')
+    return make_tuple(line)
 
 
 def cal_xn1(a, c, m, Xn):
@@ -15,43 +15,45 @@ def cal_xn1(a, c, m, Xn):
     return (a*Xn+c) % m
 
 
-def rand_mix():
-    # Contador de linea en variables
-    if not hasattr(rand_mix, 'line_count'):
-        rand_mix.line_count = 1
-    # Si no existe la cuenta es igual a 0
+def rand_mix(reset_vars=False):
+    if reset_vars:
+        generate_values(1, 'variables')
+        del rand_mix.count
+        return
+    # Si no existe la cuenta es igual a 0 y busca las siguientes variables y actualiza
     if not hasattr(rand_mix, 'count'):
         rand_mix.count = 0
-    # Si es igual a 0 busca las siguientes variables y actualiza
-    if rand_mix.count == 0:
-        cal_vars = select_next_variables('variables', rand_mix.line_count)
-        rand_mix.a = cal_vars['a']
-        rand_mix.c = cal_vars['c']
-        rand_mix.m = cal_vars['m']
-        rand_mix.Xn = cal_vars['seed']
+        rand_mix.a, rand_mix.c, rand_mix.m, rand_mix.Xn = select_next_variables(
+            'variables')
     # Calcula Xn + 1 a partir de las variables y Xn
     Xn1 = cal_xn1(rand_mix.a, rand_mix.c, rand_mix.m, rand_mix.Xn)
+    # Almacena Xn + 1 como el nuevo Xn
+    rand_mix.Xn = Xn1
     # Aumentar la cantidad de veces que se ha ejecutado rand_mix()
     rand_mix.count += 1
     # Si la cuenta es igual a m -> borra para generar nuevos números
     if rand_mix.count == rand_mix.m:
         # Si la cuenta de lineas es igual a el total de lineas -> borra para generar nuevas variables
-        if rand_mix.line_count == len(open('variables.txt').readlines()):
-            generate_values(50, 'variables')
-            del rand_mix.line_count
-        else:
-            rand_mix.line_count += 1
+        generate_values(1, 'variables')
         del rand_mix.count
-    # Almacena Xn + 1 como el nuevo Xn
-    rand_mix.Xn = Xn1
     # Regresa la variable dividiendo Xn + 1 entre m
     return Xn1 / rand_mix.m
 
-pseudo_100 = []
-for m in range(100):
-    pseudo_100.append(rand_mix())
+def use_mean_test(times, sample_size):
+    pseudo = []
+    correct_variables = 0
+    for turn in range((times + 1) * sample_size):
+        if turn % sample_size == 0 and turn != 0:
+            a, c, m, seed = select_next_variables('variables')
+            if check_mean_test(pseudo):
+                correct_variables += 1
+                write_line_txt(a, c, m, seed,'mean_variables')
+            else:
+                print('Error in: ' + str((a, c, m, seed)))
+            pseudo = []
+            rand_mix(reset_vars=True)
+        pseudo.append(rand_mix())
+    return correct_variables / times, times - correct_variables
 
-check_mean_test(pseudo_100)
-
-# Por si se quiere refrescar la lista
-# generate_values(500, 'variables')
+acc, errors = use_mean_test(100,200)
+print(f"\nErrors: {errors}, Accuracy: {acc}")
