@@ -3,6 +3,7 @@ from new_line_txt import write_line_txt
 from var_generator import generate_values
 from mean_test import check_mean_test
 from frequency_test import check_frequency_test
+from series_test import check_series_test
 
 
 def select_next_variables(file_name):
@@ -77,14 +78,40 @@ def use_frequency_test(times, sample_size, n):
         pseudo.append(rand_mix(from_txt='mean_variables'))
     return correct_variables / times, times - correct_variables
 
+# Just works till 3 by now
+def use_series_test(times, sample_size, n):
+    pseudo = []
+    correct_variables = 0
+    for turn in range((times + 1) * sample_size):
+        if turn % sample_size == 0 and turn != 0:
+            a, c, m, seed = select_next_variables('frequency_variables')
+            with open('frequency_variables.txt','r') as f:
+                lines = f.readlines()
+            with open('frequency_variables.txt','w') as f:
+                f.writelines(lines[1:])
+            if check_series_test(pseudo, n):
+                correct_variables += 1
+                write_line_txt(a, c, m, seed,'series_variables')
+            else:
+                print('Error in: ' + str((a, c, m, seed)))
+            pseudo = []
+            rand_mix(reset_vars=True,from_txt='frequency_variables')
+        pseudo.append(rand_mix(from_txt='frequency_variables'))
+    return correct_variables / times, times - correct_variables
 
 # turns = 100
 # sample_size = 200
 # acc, errors = use_mean_test(turns,sample_size)
 # print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
 
+# turns = 40
+# sample_size = 200
+# n = 4
+# acc, errors = use_frequency_test(turns, sample_size, n)
+# print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
+
 turns = 10
 sample_size = 200
-n = 4
-acc, errors = use_frequency_test(turns, sample_size, n)
+n = 2
+acc, errors = use_series_test(turns, sample_size, n)
 print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
