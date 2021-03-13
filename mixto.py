@@ -1,9 +1,7 @@
 from ast import literal_eval as make_tuple
 from new_line_txt import write_line_txt
 from var_generator import generate_values
-from mean_test import check_mean_test
-from frequency_test import check_frequency_test
-from series_test import check_series_test
+from test import check_mean_test, check_frequency_test, check_series_test
 
 
 def select_next_variables(file_name):
@@ -17,7 +15,7 @@ def cal_xn1(a, c, m, Xn):
     return (a*Xn+c) % m
 
 
-def rand_mix(reset_vars=False,from_txt='variables'):
+def rand_mix(reset_vars=False, from_txt='variables'):
     if reset_vars:
         if from_txt == 'variables':
             generate_values(1, 'variables')
@@ -42,6 +40,7 @@ def rand_mix(reset_vars=False,from_txt='variables'):
     # Regresa la variable dividiendo Xn + 1 entre m
     return Xn1 / rand_mix.m
 
+
 def use_mean_test(times, sample_size):
     pseudo = []
     correct_variables = 0
@@ -50,7 +49,7 @@ def use_mean_test(times, sample_size):
             a, c, m, seed = select_next_variables('variables')
             if check_mean_test(pseudo):
                 correct_variables += 1
-                write_line_txt(a, c, m, seed,'mean_variables')
+                write_line_txt(a, c, m, seed, 'mean_variables')
             else:
                 print('Error in: ' + str((a, c, m, seed)))
             pseudo = []
@@ -58,25 +57,27 @@ def use_mean_test(times, sample_size):
         pseudo.append(rand_mix())
     return correct_variables / times, times - correct_variables
 
+
 def use_frequency_test(times, sample_size, n):
     pseudo = []
     correct_variables = 0
     for turn in range((times + 1) * sample_size):
         if turn % sample_size == 0 and turn != 0:
             a, c, m, seed = select_next_variables('mean_variables')
-            with open('mean_variables.txt','r') as f:
+            with open('mean_variables.txt', 'r') as f:
                 lines = f.readlines()
-            with open('mean_variables.txt','w') as f:
+            with open('mean_variables.txt', 'w') as f:
                 f.writelines(lines[1:])
             if check_frequency_test(pseudo, n):
                 correct_variables += 1
-                write_line_txt(a, c, m, seed,'frequency_variables')
+                write_line_txt(a, c, m, seed, 'frequency_variables')
             else:
                 print('Error in: ' + str((a, c, m, seed)))
             pseudo = []
-            rand_mix(reset_vars=True,from_txt='mean_variables')
+            rand_mix(reset_vars=True, from_txt='mean_variables')
         pseudo.append(rand_mix(from_txt='mean_variables'))
     return correct_variables / times, times - correct_variables
+
 
 # Just works till 3 by now
 def use_series_test(times, sample_size, n):
@@ -85,17 +86,17 @@ def use_series_test(times, sample_size, n):
     for turn in range((times + 1) * sample_size):
         if turn % sample_size == 0 and turn != 0:
             a, c, m, seed = select_next_variables('frequency_variables')
-            with open('frequency_variables.txt','r') as f:
+            with open('frequency_variables.txt', 'r') as f:
                 lines = f.readlines()
-            with open('frequency_variables.txt','w') as f:
+            with open('frequency_variables.txt', 'w') as f:
                 f.writelines(lines[1:])
             if check_series_test(pseudo, n):
                 correct_variables += 1
-                write_line_txt(a, c, m, seed,'series_variables')
+                write_line_txt(a, c, m, seed, 'series_variables')
             else:
                 print('Error in: ' + str((a, c, m, seed)))
             pseudo = []
-            rand_mix(reset_vars=True,from_txt='frequency_variables')
+            rand_mix(reset_vars=True, from_txt='frequency_variables')
         pseudo.append(rand_mix(from_txt='frequency_variables'))
     return correct_variables / times, times - correct_variables
 
@@ -110,8 +111,12 @@ def use_series_test(times, sample_size, n):
 # acc, errors = use_frequency_test(turns, sample_size, n)
 # print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
 
-turns = 10
-sample_size = 200
-n = 2
-acc, errors = use_series_test(turns, sample_size, n)
-print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
+# turns = 10
+# sample_size = 200
+# n = 2
+# acc, errors = use_series_test(turns, sample_size, n)
+# print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
+
+generate_values(1, 'variables')
+for _ in range(20):
+    print(rand_mix())
