@@ -128,6 +128,7 @@ def use_poker_test(sample_size):
         turn += 1
     return correct_variables / (turn // sample_size), (turn // sample_size) - correct_variables, turn // sample_size
 
+
 if __name__ == "__main__":
     initial_variables = 50
     generate_values(initial_variables, 'txts/variables')
