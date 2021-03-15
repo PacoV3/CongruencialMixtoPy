@@ -48,7 +48,7 @@ def generate_values(n_variables, file_name):
     '''
     # Borra el contenido de variables
     open(file_name+'.txt', 'w').close()
-    while len(open('variables.txt').readlines()) != n_variables:
+    while len(open(file_name + '.txt').readlines()) != n_variables:
         a, c, m, seed = select_next_variables()
         if check_full_period(a, c, m, seed, file_name):
             write_line_txt(a, c, m, seed, file_name)
