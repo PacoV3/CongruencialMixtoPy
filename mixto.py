@@ -1,7 +1,7 @@
 from ast import literal_eval as make_tuple
 from new_line_txt import write_line_txt
 from var_generator import generate_values
-from test import check_mean_test, check_frequency_test, check_series_test
+from test import check_mean_test, check_frequency_test, check_series_test, check_poker_test
 
 
 def select_next_variables(file_name):
@@ -100,6 +100,27 @@ def use_series_test(times, sample_size, n):
         pseudo.append(rand_mix(from_txt='frequency_variables'))
     return correct_variables / times, times - correct_variables
 
+# Just works till 3 by now
+def use_poker_test(times, sample_size):
+    pseudo = []
+    correct_variables = 0
+    for turn in range((times + 1) * sample_size):
+        if turn % sample_size == 0 and turn != 0:
+            a, c, m, seed = select_next_variables('series_variables')
+            with open('series_variables.txt', 'r') as f:
+                lines = f.readlines()
+            with open('series_variables.txt', 'w') as f:
+                f.writelines(lines[1:])
+            if check_poker_test(pseudo):
+                correct_variables += 1
+                write_line_txt(a, c, m, seed, 'poker_variables')
+            else:
+                print('Error in: ' + str((a, c, m, seed)))
+            pseudo = []
+            rand_mix(reset_vars=True, from_txt='series_variables')
+        pseudo.append(rand_mix(from_txt='series_variables'))
+    return correct_variables / times, times - correct_variables
+
 # turns = 100
 # sample_size = 200
 # acc, errors = use_mean_test(turns,sample_size)
@@ -117,6 +138,11 @@ def use_series_test(times, sample_size, n):
 # acc, errors = use_series_test(turns, sample_size, n)
 # print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
 
-generate_values(1, 'variables')
-for _ in range(20):
-    print(rand_mix())
+turns = 10
+sample_size = 200
+acc, errors = use_poker_test(turns, sample_size)
+print(f"\nTurns: {turns}, Errors: {errors}, Accuracy: {acc}, Sample size: {sample_size}")
+
+# generate_values(1, 'variables')
+# for _ in range(20):
+#     print(rand_mix())
