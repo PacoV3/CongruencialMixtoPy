@@ -2,6 +2,7 @@ from ast import literal_eval as make_tuple
 from new_line_txt import write_line_txt
 from var_generator import generate_values
 from test import check_mean_test, check_frequency_test, check_series_test, check_poker_test
+from rand_tools import uniform
 
 
 def select_next_variables(file_name):
@@ -130,27 +131,33 @@ def use_poker_test(sample_size):
 
 
 if __name__ == "__main__":
-    initial_variables = 50
-    generate_values(initial_variables, 'txts/variables')
+    # initial_variables = 50
+    # generate_values(initial_variables, 'txts/variables')
 
-    sample_size = 100
-    # Accuracy:  0.9500, Errors: 5, Sample size: 100, Turns: 100
-    acc, errors, turns = use_mean_test(sample_size)
-    print(f"Mean Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # sample_size = 100
+    # # Accuracy:  0.9500, Errors: 5, Sample size: 100, Turns: 100
+    # acc, errors, turns = use_mean_test(sample_size)
+    # print(f"Mean Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
 
-    initial_variables = turns - errors
-    n = 4
-    # Accuracy:  0.9579, Errors: 4, Sample size: 100, Turns: 95
-    acc, errors, turns = use_frequency_test(sample_size, n)
-    print(f"Frequency Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # initial_variables = turns - errors
+    # n = 4
+    # # Accuracy:  0.9579, Errors: 4, Sample size: 100, Turns: 95
+    # acc, errors, turns = use_frequency_test(sample_size, n)
+    # print(f"Frequency Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
 
-    initial_variables = turns - errors
-    n = 3
-    # Accuracy:  0.9341, Errors: 6, Sample size: 100, Turns: 91
-    acc, errors, turns = use_series_test(sample_size, n)
-    print(f"Series Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # initial_variables = turns - errors
+    # n = 3
+    # # Accuracy:  0.9341, Errors: 6, Sample size: 100, Turns: 91
+    # acc, errors, turns = use_series_test(sample_size, n)
+    # print(f"Series Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
 
-    initial_variables = turns - errors
-    # Accuracy:  0.9882, Errors: 1, Sample size: 100, Turns: 85
-    acc, errors, turns = use_poker_test(sample_size)
-    print(f"Poker Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # initial_variables = turns - errors
+    # # Accuracy:  0.9882, Errors: 1, Sample size: 100, Turns: 85
+    # acc, errors, turns = use_poker_test(sample_size)
+    # print(f"Poker Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+
+    for times in range(20):
+        rand_val = rand_mix(from_txt='txts/poker_variables')
+        print(rand_val,uniform(-1, 1, rand_val))
+        # if times % 1277 == 0:
+        #     print(rand_val)

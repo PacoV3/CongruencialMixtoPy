@@ -21,7 +21,7 @@ def select_next_variables():
     return (a, c, prime_values[index], time_var % prime_values[index])
 
 
-def check_full_period(a, c, m, seed, file_name):
+def check_full_period(a, c, m, seed):
     '''
     Funcion para checar el periodo
     '''
@@ -50,7 +50,7 @@ def generate_values(n_variables, file_name):
     open(file_name+'.txt', 'w').close()
     while len(open(file_name + '.txt').readlines()) != n_variables:
         a, c, m, seed = select_next_variables()
-        if check_full_period(a, c, m, seed, file_name):
+        if check_full_period(a, c, m, seed):
             write_line_txt(a, c, m, seed, file_name)
 
 # generate_values(1,'variables')
