@@ -2,7 +2,7 @@ from ast import literal_eval as make_tuple
 from new_line_txt import write_line_txt
 from var_generator import generate_values
 from test import check_mean_test, check_frequency_test, check_series_test, check_poker_test
-from rand_tools import uniform, pi_montecarlo
+from rand_tools import dist_uniform, pi_montecarlo
 
 
 def select_next_variables(file_name):
