@@ -28,6 +28,14 @@ def dis_poisson(l, R):
         der = der + px(l, x)
 
 
+def dist_erlang(l, list_R):
+    k = len(list_R)
+    x = 1
+    for rand in list_R:
+        x = x * (1 - rand)
+    return -1 / (k * l) * log(x)
+
+
 # list_of_pair_rands = [ (R0,R1), (R0,R1), (R0,R1) ]
 def pi_montecarlo(list_of_pair_rands):
     n = len(list_of_pair_rands)
