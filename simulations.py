@@ -8,7 +8,7 @@ def get_n_rands(n):
         rands.append(rand_mix(from_txt='txts/poker_variables'))
     return tuple(rands)
 
-def run_simulation(n_pieces, l, mean, ds):
+def run_simulation(n_pieces, l, mean, sd):
     '''
     Funcion para simular una linea de produccion a partir de una cantidad
     de piezas
@@ -20,7 +20,7 @@ def run_simulation(n_pieces, l, mean, ds):
         # Random values
         r, u1, u2 = get_n_rands(3) 
         exp_t = dist_exponential(l, r)
-        norm_t = dist_normal(u1, u2, mean, ds)
+        norm_t = dist_normal(u1, u2, mean, sd)
         # Arrival vals
         arrival = last_arrival + exp_t
         last_arrival = arrival

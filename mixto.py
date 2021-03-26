@@ -39,7 +39,7 @@ def rand_mix(reset_vars=False, from_txt='txts/variables'):
             f.writelines(lines[1:])
         del rand_mix.count
     # Regresa la variable dividiendo Xn + 1 entre m
-    return (Xn1 / rand_mix.m) +  + 1e-308
+    return (Xn1 / rand_mix.m) + 1e-308
 
 
 def use_mean_test(sample_size):
