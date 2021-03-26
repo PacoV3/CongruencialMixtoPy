@@ -1,12 +1,25 @@
-from math import log, exp, factorial
+from math import log, exp, factorial, sqrt, cos, pi
+
+
+def dist_normal(u1, u2, mean, sd):
+    '''
+    Funcion para obtener un valor aleatorio en la distribucion
+    normal en base a una media y una desviacion estandar
+    '''
+    x = sqrt(-2 * log(u1)) * cos(2 * pi * u2)
+    return x * sd + mean
 
 
 def dist_uniform(a, b, R):
+    '''
+    Funcion para obtener un valor uniforme en el rango de 
+    "a" a "b" 
+    '''
     return a + (b - a) * R
 
 
 def dist_exponential(l, R):
-    return -1 / l * log(R)
+    return -l * log(1 - R)
 
 
 def dist_bernoulli(p, R):
