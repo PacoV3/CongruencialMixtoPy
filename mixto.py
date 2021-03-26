@@ -1,3 +1,4 @@
+
 from ast import literal_eval as make_tuple
 from new_line_txt import write_line_txt
 from var_generator import generate_values
@@ -16,15 +17,15 @@ def cal_xn1(a, c, m, Xn):
     return (a*Xn+c) % m
 
 
-def rand_mix(reset_vars=False, from_txt='txts/variables'):
+def rand_mix(reset_vars=False, from_txt, vars=None):
     if reset_vars:
         del rand_mix.count
         return
     # Si no existe la cuenta es igual a 0 y busca las siguientes variables y actualiza
     if not hasattr(rand_mix, 'count'):
         rand_mix.count = 0
-        rand_mix.a, rand_mix.c, rand_mix.m, rand_mix.Xn = select_next_variables(
-            from_txt)
+        rand_mix.a, rand_mix.c, rand_mix.m, rand_mix.Xn = vars if vars else select_next_variables(
+                from_txt)
     # Calcula Xn + 1 a partir de las variables y Xn
     Xn1 = cal_xn1(rand_mix.a, rand_mix.c, rand_mix.m, rand_mix.Xn)
     # Almacena Xn + 1 como el nuevo Xn
@@ -134,36 +135,37 @@ def use_poker_test(sample_size):
     return correct_variables / (turn // sample_size), (turn // sample_size) - correct_variables, turn // sample_size
 
 
+def generate_variables(initial_variables, sample_size):
+    generate_values(initial_variables, 'txts/variables')
+    # Mean Test
+    acc, errors, turns = use_mean_test(sample_size)
+    print(f"Mean Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # Frequency Test
+    remaining_variables = turns - errors
+    n = 4
+    acc, errors, turns = use_frequency_test(sample_size, n)
+    print(f"Frequency Test Results - {turns - errors} pass from {remaining_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # Series Test
+    remaining_variables = turns - errors
+    n = 3
+    acc, errors, turns = use_series_test(sample_size, n)
+    print(f"Series Test Results - {turns - errors} pass from {remaining_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # Poker Test
+    remaining_variables = turns - errors
+    acc, errors, turns = use_poker_test(sample_size)
+    print(f"Poker Test Results - {turns - errors} pass from {remaining_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+
+
 if __name__ == "__main__":
-    # initial_variables = 500
-    # generate_values(initial_variables, 'txts/variables')
+    print(rand_mix(vars=(1001, 21, 1277, 942)))
+    print(rand_mix(vars=(1001, 21, 1277, 942)))
 
-    # sample_size = 200
-    # # Accuracy:  0.9500, Errors: 5, Sample size: 100, Turns: 100
-    # acc, errors, turns = use_mean_test(sample_size)
-    # print(f"Mean Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
+    # generate_variables(initial_variables=500, sample_size=200)
 
-    # initial_variables = turns - errors
-    # n = 4
-    # # Accuracy:  0.9579, Errors: 4, Sample size: 100, Turns: 95
-    # acc, errors, turns = use_frequency_test(sample_size, n)
-    # print(f"Frequency Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
-
-    # initial_variables = turns - errors
-    # n = 3
-    # # Accuracy:  0.9341, Errors: 6, Sample size: 100, Turns: 91
-    # acc, errors, turns = use_series_test(sample_size, n)
-    # print(f"Series Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
-
-    # initial_variables = turns - errors
-    # # Accuracy:  0.9882, Errors: 1, Sample size: 100, Turns: 85
-    # acc, errors, turns = use_poker_test(sample_size)
-    # print(f"Poker Test Results - {turns - errors} pass from {initial_variables}\nAccuracy: {acc:6.4f}, Errors: {errors}, Sample size: {sample_size}, Turns: {turns}\n")
-
-    r0_r1_list = []
-    for times in range(100000):
-        r0 = rand_mix(from_txt='txts/poker_variables')
-        r1 = rand_mix(from_txt='txts/poker_variables')
-        r0_r1_list.append((r0, r1))
-        if times % 10000 == 0 and times != 0:
-            print(pi_montecarlo(r0_r1_list), len(r0_r1_list))
+    # r0_r1_list = []
+    # for times in range(100000):
+    #     r0 = rand_mix(from_txt='txts/poker_variables')
+    #     r1 = rand_mix(from_txt='txts/poker_variables')
+    #     r0_r1_list.append((r0, r1))
+    #     if times % 10000 == 0 and times != 0:
+    #         print(pi_montecarlo(r0_r1_list), len(r0_r1_list))

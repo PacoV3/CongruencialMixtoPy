@@ -1,5 +1,3 @@
-
-
 def write_line_txt(a, c, m, seed, file_name):
     '''
     Funcion para escribir la lista de los valores de Xn, a, c, m y seed
