@@ -29,7 +29,7 @@ def dist_bernoulli(p, R):
 
 
 def dis_poisson(l, R):
-    px = lambda l, x : l ** x * exp(-l) / factorial(x)
+    px = lambda l, x: l**x * exp(-l) / factorial(x)
     x = 0
     izq = 0
     der = px(l, x)
@@ -56,12 +56,11 @@ def pi_montecarlo(list_of_pair_rands):
     for r0, r1 in list_of_pair_rands:
         x = dist_uniform(-1, 1, r0)
         y = dist_uniform(-1, 1, r1)
-        d = x ** 2 + y ** 2
+        d = x**2 + y**2
         if d < 1:
             n_inside_circle += 1
     return n_inside_circle / n * 4
 
 
 if __name__ == "__main__":
-    print(dis_poisson(5, 0.85))
-    print(dis_poisson(7, 0.85))
+    pass

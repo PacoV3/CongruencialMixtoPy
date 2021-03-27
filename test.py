@@ -8,14 +8,16 @@ def check_mean_test(list_pseudo):
     # Promedio
     observed_mean = sum(list_pseudo) / len(list_pseudo)
     # Cálculo de Z0
-    z0 = (observed_mean - EXPECTED_MEAN) * sqrt(len(list_pseudo)) / sqrt(1/12)
+    z0 = (observed_mean - EXPECTED_MEAN) * sqrt(len(list_pseudo)) / sqrt(
+        1 / 12)
     # Comparación
     return abs(z0) < Z_VALUE
 
 
 def check_frequency_test(mean_rand_list, n):
-    chi_vals = [3.84, 5.99, 7.81, 9.49, 11.07,
-                12.59, 14.07, 15.51, 19.92, 18.31]
+    chi_vals = [
+        3.84, 5.99, 7.81, 9.49, 11.07, 12.59, 14.07, 15.51, 19.92, 18.31
+    ]
     N = len(mean_rand_list)
     val = 1 / n
     FE = N / n
@@ -25,50 +27,54 @@ def check_frequency_test(mean_rand_list, n):
             if val * i <= rand_num < val * (i + 1):
                 fo[i] += 1
                 break
-    squares = [(num - FE) ** 2 for num in fo]
+    squares = [(num - FE)**2 for num in fo]
     chi2_0 = sum(squares) / FE
     chi2_alpha_lib = chi_vals[n - 2]
     return chi2_0 < chi2_alpha_lib
 
 
 def check_series_test(freq_rand_list, n):
-    chi_vals = [3.84, 5.99, 7.81, 9.49, 11.07,
-                12.59, 14.07, 15.51, 19.92, 18.31]
+    chi_vals = [
+        3.84, 5.99, 7.81, 9.49, 11.07, 12.59, 14.07, 15.51, 19.92, 18.31
+    ]
     N = len(freq_rand_list)
     val = 1 / n
-    FE = (N - 1) / n ** 2
-    fo = [0] * n ** 2
+    FE = (N - 1) / n**2
+    fo = [0] * n**2
     X = freq_rand_list[:-1]
     y = freq_rand_list[1:]
     for num in range(len(X)):
         for row in range(n):
             for col in range(n):
-                if (val * col <= X[num] < val * (col + 1)) and (val * row <= y[num] < val * (row + 1)):
+                if (val * col <= X[num] < val *
+                    (col + 1)) and (val * row <= y[num] < val * (row + 1)):
                     fo[row * n + col] += 1
                     break
-    squares = [(num - FE) ** 2 for num in fo]
-    chi2_0 = n ** 2 / (N - 1) * sum(squares)
-    chi2_alpha_lib = chi_vals[n ** 2 - 2]
+    squares = [(num - FE)**2 for num in fo]
+    chi2_0 = n**2 / (N - 1) * sum(squares)
+    chi2_alpha_lib = chi_vals[n**2 - 2]
     return chi2_0 < chi2_alpha_lib
 
 
 def check_poker_test(series_rand_list):
-    chi_vals = [3.84, 5.99, 7.81, 9.49, 11.07,
-                12.59, 14.07, 15.51]
+    chi_vals = [3.84, 5.99, 7.81, 9.49, 11.07, 12.59, 14.07, 15.51]
     N = len(series_rand_list)
     probabilities = [0.0001, 0.0045, 0.009, 0.072, 0.108, 0.504, 0.3024]
     fe = [N * p for p in probabilities]
-    breakdown = [str(rand_num)[2:7] for rand_num in series_rand_list]
+    breakdown = [
+        str(int(rand_num * 100000))[:5] for rand_num in series_rand_list
+    ]
     # Add missing zeroes
     for index in range(len(breakdown)):
         while len(breakdown[index]) < 5:
-            breakdown[index] += '0'
+            breakdown[index] += "0"
     # Fill counting
     counting = []
     for num5 in breakdown:
         temp_row = [0] * 10
         for str_num_val in num5:
-            temp_row[int(str_num_val)] += 1
+            num = int(str_num_val)
+            temp_row[num] += 1
         counting.append(temp_row)
     # Fill FO
     fo = [0] * 7
@@ -81,7 +87,7 @@ def check_poker_test(series_rand_list):
             fo[2] += 1
         elif 3 in row:
             fo[3] += 1
-        elif row.count(2) == 2: 
+        elif row.count(2) == 2:
             fo[4] += 1
         elif 2 in row:
             fo[5] += 1
@@ -96,10 +102,12 @@ def check_poker_test(series_rand_list):
         acc_fe += temp_fe
         acc_fo += fo[count]
         count += 1
-    cat_list = [(fe[index] - fo[index]) ** 2 / fe[index] for index in range(count,7)]
-    chi2_0 = sum(cat_list) + ((acc_fe - acc_fo) ** 2 / acc_fe)
+    cat_list = [(fe[index] - fo[index])**2 / fe[index]
+                for index in range(count, 7)]
+    chi2_0 = sum(cat_list) + ((acc_fe - acc_fo)**2 / acc_fe)
     chi2_alpha_lib = chi_vals[6 - count]
     return chi2_0 < chi2_alpha_lib
-    
+
+
 if __name__ == "__main__":
-    check_poker_test([0.052583862, 0.655485041, 0.159564823, 0.743427017, 0.189483228, 0.691749773, 0.460562103, 0.041704442, 0.765185857, 0.970081596, 0.070716228, 0.805983681, 0.808703536, 0.531278332, 0.828649139, 0.496826836, 0.342701723, 0.063463282, 0.545784225, 0.349048051, 0.416137806, 0.572982774, 0.574796011, 0.389845875, 0.254759746, 0.033544878, 0.597461469, 0.077969175, 0.066183137, 0.268359021, 0.646418858, 0.084315503, 0.418857661, 0.29555757, 0.872166818, 0.058023572, 0.100634633, 0.754306437, 0.079782412, 0.881233001, 0.133272892, 0.425203989, 0.648232094, 0.899365367, 0.283771532, 0.074342702, 0.436083409, 0.538531278, 0.088848595, 0.956482321, 0.457842248, 0.319129646, 0.46781505, 0.301903898, 0.224841342, 0.085222121, 0.326382593, 0.728014506, 0.761559383, 0.339981868, 0.340888486, 0.248413418, 0.680870354, 0.570262919, 0.852221215, 0.092475068, 0.586582049, 0.187669991, 0.876699909, 0.595648232, 0.262919311, 0.201269266, 0.489573889, 0.082502267, 0.603807797, 0.430643699, 0.093381686, 0.494106981, 0.620126927, 0.766092475, 0.877606528, 0.503173164, 0.695376247, 0.090661831, 0.771532185, 0.32275612, 0.097914778, 0.031731641, 0.782411605, 0.213055304, 0.287398005, 0.70444243, 0.165911151, 0.096101541, 0.216681777, 0.917497733, 0.434270172, 0.723481414, 0.223934723, 0.177697189, 0.893925657, 0.83862194, 0.479601088, 0.099728015, 0.846781505, 0.647325476, 0.991840435, 0.851314597, 0.184950136, 0.154125113, 0.298277425, 0.594741614, 0.355394379, 0.76881233, 0.600181324, 0.800543971, 0.363553944, 0.936536718, 0.492293744, 0.805077063, 0.901178604, 0.098821396, 0.939256573, 0.21486854, 0.102447869, 0.569356301, 0.944696283, 0.660018132, 0.697189483, 0.905711695, 0.636446056, 0.101541251, 0.661831369, 0.512239347, 0.770625567, 0.415231188, 0.665457842, 0.142339075, 0.500453309, 0.972801451, 0.793291024, 0.103354488, 0.476881233, 0.377153218, 0.549410698, 0.979147779, 0.145965549, 0.130553037, 0.702629193, 0.350861287, 0.23118767, 0.437896646, 0.353581142, 0.953762466, 0.735267452, 0.02175884, 0.799637353, 0.456029012, 0.504079782, 0.602901179, 0.523118767, 0.660924751, 0.604714415, 0.338168631, 0.525838622, 0.383499547, 0.902085222, 0.006346328, 0.371713509, 0.104261106, 0.384406165, 0.809610154, 0.438803264, 0.261106074, 0.386219402, 0.624660018, 0.303717135, 0.039891206, 0.950135993, 0.105167724, 0.291931097, 0.24206709, 0.32819583, 0.54306437, 0.626473255, 0.118766999, 0.904805077, 0.728921124, 0.669084316, 0.772438803, 0.230281052, 0.530371714, 0.921124207, 0.0643699, 0.453309157, 0.781504986, 0.305530372, 0.85494107, 0.815049864, 0.883952856])
+    pass

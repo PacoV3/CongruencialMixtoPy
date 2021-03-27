@@ -1,19 +1,40 @@
 # http://compoasso.free.fr/primelistweb/page/prime/liste_online_en.php
+from timeit import timeit
 from time import time
 from new_line_txt import write_line_txt
 
 
 # aproximadamente 350 combinaciones correctas en 1000 vueltas
 def select_next_variables():
-    '''
+    """
     Funcion para la seleccion de variables
-    '''
-    time_var = int(time() * 1000)
+    """
+    time_var = int(time() * 1000000)
     # Lista de posibles m
-    prime_values = [1097, 1103, 1109, 1117, 1123, 1163, 1171, 1181, 1187, 1193, 1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, 1259, 1277, 1279, 1303, 1307, 1373, 1381, 1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499, 1511, 1523, 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597, 1601, 1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663, 1667, 1669, 1693, 1697, 1699, 1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, 1787, 1789, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999, 2003, 2011, 2017,
-                    2029, 2039, 2053, 2083, 2087, 2089, 2099, 2111, 2113, 2129, 2131, 2137, 2141, 2143, 2153, 2161, 2179, 2203, 2207, 2251, 2267, 2297, 2309, 2311, 2333, 2339, 2341, 2347, 2351, 2357, 2371, 2377, 2381, 2383, 2389, 2393, 2399, 2411, 2417, 2423, 2437, 2441, 2447, 2459, 2467, 2473, 2477, 2503, 2521, 2531, 2539, 2543, 2549, 2551, 2557, 2579, 2591, 2593, 2609, 2617, 2621, 2633, 2647, 2657, 2659, 2663, 2671, 2677, 2683, 2687, 2689, 2693, 2699, 2707, 2711, 2713, 2719, 2729, 2731, 2741, 2789, 2791, 2797, 2801, 2803, 2819, 2833, 2837, 2879, 2887, 2897, 2903, 2909, 2917, 2927, 2939, 2953, 2957, 2963, 2969, 2971, 2999]
+    prime_values = [
+        11593, 11597, 11617, 11621, 11633, 11657, 11677, 11681, 11689, 11699,
+        11701, 11717, 11719, 11731, 11743, 11777, 11779, 11783, 11789, 11801,
+        11807, 11813, 11821, 11827, 11831, 11833, 11839, 11863, 11867, 11887,
+        11897, 11903, 11909, 11923, 11927, 11933, 11939, 11941, 11953, 11959,
+        11969, 11971, 11981, 11987, 12007, 12011, 12037, 12041, 12043, 12049,
+        12071, 12073, 12097, 12101, 12107, 12109, 12113, 12119, 12143, 12149,
+        12157, 12161, 12163, 12197, 12203, 12211, 12227, 12239, 12241, 12251,
+        12253, 12263, 12269, 12277, 12281, 12289, 12301, 12323, 12329, 12343,
+        12347, 12373, 12377, 12379, 12391, 12401, 12409, 12413, 12421, 12433,
+        12437, 12451, 12457, 12473, 12479, 12487, 12491, 12497, 12503, 12511,
+        12517, 12527, 12539, 12541, 12547, 12553, 12569, 12577, 12583, 12589,
+        12601, 12611, 12613, 12619, 12637, 12641, 12647, 12653, 12659, 12671,
+        12689, 12697, 12703, 12713, 12721, 12739, 12743, 12757, 12763, 12781,
+        12791, 12799, 12809, 12821, 12823, 12829, 12841, 12853, 12889, 12893,
+        12899, 12907, 12911, 12917, 12919, 12923, 12941, 12953, 12959, 12967,
+        12973, 12979, 12983, 13001, 13003, 13007, 13009, 13033, 13037, 13043,
+        13049, 13063, 13093, 13099, 13103, 13109, 13121, 13127, 13147, 13151,
+        13159, 13163, 13171, 13177, 13183, 13187, 13217, 13219, 13229, 13241,
+        13249, 13259, 13267, 13291, 13297, 13309, 13313, 13327, 13331, 13337,
+        13339, 13367
+    ]
     # a y c siguen el consejo del libro
-    a = 10 ** (time_var % 3 + 2) + 1
+    a = 10**(time_var % 3 + 2) + 1
     c = ((time_var % 7) * 200) + 21
     # Tomar un index a partir de el tiempo actual
     index = time_var % len(prime_values)
@@ -22,16 +43,16 @@ def select_next_variables():
 
 
 def check_full_period(a, c, m, seed):
-    '''
+    """
     Funcion para checar el periodo
-    '''
+    """
     # Igualamos el primer valor de la lista por Xn
-    Xn = (a*seed+c) % m
+    Xn = (a * seed + c) % m
     list_of_Xn1 = {Xn}
     # Por cada numero antes de m - 2
     for _ in range(m - 2):
         # Calculamos Xn1
-        Xn1 = (a*Xn+c) % m
+        Xn1 = (a * Xn + c) % m
         # Si Xn1 esta en el listado regresa False
         if Xn1 in list_of_Xn1:
             return False
@@ -42,15 +63,20 @@ def check_full_period(a, c, m, seed):
     return True
 
 
-def generate_values(n_variables, file_name):
-    '''
+def generate_variables(n):
+    """
     Funcion para generar variables a partir de vueltas
-    '''
-    # Borra el contenido de variables
-    open(file_name+'.txt', 'w').close()
-    while len(open(file_name + '.txt').readlines()) != n_variables:
+    """
+    variables = []
+    attempts = 0
+    while len(variables) < n:
+        attempts += 1
         a, c, m, seed = select_next_variables()
         if check_full_period(a, c, m, seed):
-            write_line_txt(a, c, m, seed, file_name)
+            variables.append((a, c, m, seed))
+    return variables, attempts
 
-# generate_values(1,'variables')
+
+if __name__ == "__main__":
+    # python3 -m timeit -n 1000 -s 'from var_generator import generate_variables' 'generate_variables(1)'
+    print(timeit(lambda: generate_variables(1), number=1000))
