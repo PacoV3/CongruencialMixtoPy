@@ -30,12 +30,11 @@ def select_next_variables():
         12973, 12979, 12983, 13001, 13003, 13007, 13009, 13033, 13037, 13043,
         13049, 13063, 13093, 13099, 13103, 13109, 13121, 13127, 13147, 13151,
         13159, 13163, 13171, 13177, 13183, 13187, 13217, 13219, 13229, 13241,
-        13249, 13259, 13267, 13291, 13297, 13309, 13313, 13327, 13331, 13337,
-        13339, 13367
+        13249, 13259, 13267, 13291, 13297, 13309, 13313, 13327, 13331, 13337
     ]
     # a y c siguen el consejo del libro
     a = 10**(time_var % 3 + 2) + 1
-    c = ((time_var % 7) * 200) + 21
+    c = time_var % 64 * 200 + 21
     # Tomar un index a partir de el tiempo actual
     index = time_var % len(prime_values)
     # Regresar los valores
@@ -47,17 +46,15 @@ def check_full_period(a, c, m, seed):
     Funcion para checar el periodo
     """
     # Igualamos el primer valor de la lista por Xn
-    Xn = (a * seed + c) % m
-    list_of_Xn1 = {Xn}
+    Xn1 = (a * seed + c) % m
+    list_of_Xn1 = {Xn1}
     # Por cada numero antes de m - 2
     for _ in range(m - 2):
         # Calculamos Xn1
-        Xn1 = (a * Xn + c) % m
+        Xn1 = (a * Xn1 + c) % m
         # Si Xn1 esta en el listado regresa False
         if Xn1 in list_of_Xn1:
             return False
-        # Agrega Xn1 a la lista de Xn y actualiza el valor de Xn para la siguiente vuelta
-        Xn = Xn1
         list_of_Xn1.add(Xn1)
     # Si no se encontraron repetidos regresa True
     return True
@@ -79,4 +76,13 @@ def generate_variables(n):
 
 if __name__ == "__main__":
     # python3 -m timeit -n 1000 -s 'from var_generator import generate_variables' 'generate_variables(1)'
-    print(timeit(lambda: generate_variables(1), number=1000))
+    # print(timeit(lambda: generate_variables(1), number=1000))
+    times = 100000
+    start = time()
+    for _ in range(times):
+        # a, c, m, seed = select_next_variables()
+        # check_full_period(1001, 821, 11597, 96)
+        check_full_period(*select_next_variables())
+    end = time()
+    duration = end - start
+    print(f"Time for {times}: {round(duration * 1000,2)} ms")
