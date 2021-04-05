@@ -74,15 +74,20 @@ def generate_variables(n):
     return variables, attempts
 
 
-if __name__ == "__main__":
+def main():
     # python3 -m timeit -n 1000 -s 'from var_generator import generate_variables' 'generate_variables(1)'
     # print(timeit(lambda: generate_variables(1), number=1000))
-    times = 100000
+    times = 1000
     start = time()
-    for _ in range(times):
-        # a, c, m, seed = select_next_variables()
-        # check_full_period(1001, 821, 11597, 96)
-        check_full_period(*select_next_variables())
+    # for _ in range(times):
+    #     # a, c, m, seed = select_next_variables()
+    #     # check_full_period(1001, 821, 11597, 96)
+    #     check_full_period(*select_next_variables())
+    generate_variables(times)
     end = time()
     duration = end - start
     print(f"Time for {times}: {round(duration * 1000,2)} ms")
+
+
+if __name__ == "__main__":
+    main()

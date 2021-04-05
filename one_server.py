@@ -35,7 +35,7 @@ def run_simulation(n_pieces, l, mean, sd):
     return inspection_times
 
 
-pieces = 2000
+pieces = 5000
 ins_times = run_simulation(pieces, l=5, mean=4, sd=0.5)
 
 x = range(len(ins_times))
