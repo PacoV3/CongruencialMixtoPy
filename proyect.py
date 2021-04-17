@@ -40,12 +40,9 @@ class Event():
         self.event_type = event_type
         self.client = client
 
-    # def getTime(self):
-    #     return self.event.time
 
 def getTime(event):
     return event.time
-
 
 class Simulation():
     EMPTY = 0
@@ -129,7 +126,6 @@ class Simulation():
 
 
 sim = Simulation()
-
 sim.run()
 
 office_time_c1 = []
@@ -145,53 +141,7 @@ for exit in sim.exits:
         office_time_c2.append(exit.exit_server_time - exit.arrival_time)
 
 
-print(f"a) = Total sim time: {sim.clock}")
-print(f"b) = Type 1 clients: {count_for_type1}")
-print(f"c) = Average for client 1: {np.average(office_time_c1)}, Average for client 2: {np.average(office_time_c2)}")
-print(f"d) = Max clients: {sim.max_queue_len}")
-
-# timeinsystem_engrane_avg = 0
-# timeinsystem_placa_avg = 0
-# engranes = []
-# placas = []
-# for piece in sim.exits:
-#     if type(piece).__name__ == "Client_2":
-#         if timeinsystem_placa_avg:
-#             timeinsystem_placa_avg = timeinsystem_placa_avg + \
-#                 ((piece.exit_empacado_time - piece.arrival_time) -
-#                  timeinsystem_placa_avg)/(len(placas)+1)
-#         else:
-#             timeinsystem_placa_avg = piece.exit_empacado_time - piece.arrival_time
-#         placas.append((piece.exit_empacado_time, timeinsystem_placa_avg))
-# for piece in sim.exits:
-#     if type(piece).__name__ == "Client_1":
-#         if timeinsystem_engrane_avg:
-#             timeinsystem_engrane_avg = timeinsystem_engrane_avg + \
-#                 ((piece.exit_empacado_time - piece.arrival_time) -
-#                  timeinsystem_engrane_avg)/(len(engranes)+1)
-#         else:
-#             timeinsystem_engrane_avg = piece.exit_empacado_time - piece.arrival_time
-#         engranes.append((piece.exit_empacado_time, timeinsystem_engrane_avg))
-
-
-# print("Salieron {} engranes".format(len(engranes)))
-# print("Salieron {} placas".format(len(placas)))
-# print("Rechazaron {} engranes".format(len(sim.rejected_engrane)))
-# print("Rechazaron {} placas".format(len(sim.rejected_placa)))
-
-# #Graficas
-# engranes = np.array(engranes)
-# placas = np.array(placas)
-# print(engranes[:10])
-
-# fig, ax = plt.subplots()
-# ax.plot(engranes[:, 0], engranes[:, 1], label="Client_1")
-# ax.plot(placas[:, 0], placas[:, 1], label="Placas")
-
-# ax.set(xlabel='Tiempo (m)', ylabel='Estancia Promedio (m)',
-#        title='Estancia promedio de piezas')
-# legend = ax.legend(shadow=True, fontsize='x-large')
-# legend.get_frame().set_facecolor('C0')
-# ax.grid()
-# # fig.savefig("test.png")
-# plt.show()
+print(f"a) Total sim time: {sim.clock}")
+print(f"b) Type 1 clients: {count_for_type1}")
+print(f"c) Average for client 1: {np.average(office_time_c1)}, Average for client 2: {np.average(office_time_c2)}")
+print(f"d) Max clients: {sim.max_queue_len}")
